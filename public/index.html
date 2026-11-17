@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feeling With — Menu</title>
+    <link rel="stylesheet" href="/css/menu.css" />
+  </head>
+  <body>
+    <!-- Hero: the first screen. Logo/name/tagline come from the public
+         settings API (menu.js) — nothing here is hardcoded branding. -->
+    <section class="hero" id="hero-section">
+      <div class="hero-inner">
+        <img id="brand-logo" class="hero-logo" alt="Logo" hidden />
+        <h1 id="brand-name" class="hero-name">Feeling With</h1>
+        <p id="brand-tagline" class="hero-tagline" hidden></p>
+        <p class="hero-headline">A warm cup, made just for you.</p>
+        <div class="hero-actions">
+          <button type="button" class="hero-btn hero-btn-primary" id="hero-view-menu">View Menu</button>
+          <button type="button" class="hero-btn hero-btn-secondary" id="hero-spin-wheel">Let Us Choose For You</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manually-curated Top Sellers (owner-approved enhancement): a
+         featured-products showcase, positioned directly after the Hero
+         and before Category browsing, per the brief. Never rendered as —
+         or claimed to be — automatically calculated sales figures. -->
+    <section class="top-sellers-section" id="top-sellers-section" hidden>
+      <h2 class="section-title">Top Sellers</h2>
+      <p class="top-sellers-intro">Hand-picked favorites from our menu.</p>
+      <div id="top-sellers-root" class="top-sellers-root"></div>
+    </section>
+
+    <!-- Category cards: the primary category presentation (brief sec. 3). -->
+    <section class="categories-section" id="categories-section">
+      <h2 class="section-title">Browse by Category</h2>
+      <div id="category-cards" class="category-cards"></div>
+    </section>
+
+    <!-- Full menu: search + sticky quick-jump nav + per-category grids. -->
+    <section class="menu-section-wrap" id="menu-section">
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <input type="search" id="menu-search" class="search-input" placeholder="Search the menu…" aria-label="Search the menu" />
+          <button type="button" class="search-clear-btn" id="menu-search-clear" hidden>Clear</button>
+        </div>
+      </div>
+
+      <nav id="category-nav" class="category-nav" aria-label="Jump to category"></nav>
+
+      <main id="menu-root" class="menu-root"></main>
+    </section>
+
+    <!-- Recommendation wheel (display-only; never creates an order). -->
+    <section class="wheel-section" id="wheel-section">
+      <h2 class="section-title">Let Us Choose For You</h2>
+      <p class="wheel-intro">Can't decide? Spin the wheel for a random pick from today's menu.</p>
+      <div id="wheel-root" class="wheel-root"></div>
+    </section>
+
+    <footer class="menu-footer">
+      <div id="footer-contact" class="footer-contact"></div>
+      <div id="footer-social" class="footer-social"></div>
+    </footer>
+
+    <div id="quick-view-root"></div>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/money.js"></script>
+    <script src="/js/wheelMath.js"></script>
+    <script src="/js/menuApi.js"></script>
+    <script src="/js/menu.js"></script>
+  </body>
+</html>

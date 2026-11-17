@@ -1,0 +1,26 @@
+# Dependencies — reinstalled from package.json/package-lock.json.
+node_modules/
+
+# Secrets — .env.example (committed) documents every variable name and a
+# safe placeholder; the real .env file must never be committed.
+.env
+.env.*
+!.env.example
+
+# Locally-uploaded images (LocalDiskProvider). Keep the directory itself
+# (via .gitkeep) so `npm start` doesn't need to create it on first run, but
+# never commit an owner's actual uploaded product photos.
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test/coverage output
+coverage/
+
+# OS/editor noise
+.DS_Store
+.vscode/
+.idea/

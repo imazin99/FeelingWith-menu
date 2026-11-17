@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feeling With — Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand" id="brand-name">Feeling With</div>
+      <nav class="nav">
+        <button class="nav-link" data-route="overview">Overview</button>
+        <button class="nav-link" data-route="products">Products</button>
+        <button class="nav-link" data-route="topsellers">Top Sellers</button>
+        <button class="nav-link" data-route="categories">Categories</button>
+        <button class="nav-link" data-route="addons">Add-ons</button>
+        <button class="nav-link" data-route="users">Admin Accounts</button>
+        <button class="nav-link" data-route="settings">Settings</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="sidebar-user">—</div>
+        <button class="btn btn-secondary btn-sm" id="logout-btn" style="width:100%;">Log Out</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+          <h1 id="view-title">Overview</h1>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="view" id="view-overview"></section>
+        <section class="view" id="view-products"></section>
+        <section class="view" id="view-topsellers"></section>
+        <section class="view" id="view-categories"></section>
+        <section class="view" id="view-addons"></section>
+        <section class="view" id="view-users"></section>
+        <section class="view" id="view-settings"></section>
+      </main>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-stack"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/money.js"></script>
+  <script src="/js/router.js"></script>
+  <script src="/js/views/overview.js"></script>
+  <script src="/js/views/categories.js"></script>
+  <script src="/js/views/addons.js"></script>
+  <script src="/js/views/products.js"></script>
+  <script src="/js/views/topSellers.js"></script>
+  <script src="/js/views/users.js"></script>
+  <script src="/js/views/settings.js"></script>
+  <script src="/js/dashboardShell.js"></script>
+</body>
+</html>

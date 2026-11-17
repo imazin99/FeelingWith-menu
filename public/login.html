@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feeling With — Admin Login</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="brand" id="brand-name">Feeling With</div>
+    <div class="brand-sub">Admin Dashboard</div>
+
+    <div id="alert-area"></div>
+
+    <form id="login-form" novalidate>
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn btn-primary" id="login-submit">Log In</button>
+    </form>
+  </div>
+
+  <div id="toast-stack"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>
