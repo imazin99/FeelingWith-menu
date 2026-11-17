@@ -513,6 +513,68 @@ img {
   }
 }
 
+/* ---------- Collapsible category products (owner-approved enhancement) ---------- */
+/*
+   The extra, initially-hidden products sit in their own grid, wrapped in
+   a grid-rows container (0fr collapsed / 1fr expanded) with the inner
+   element clipping overflow — this animates smoothly for any amount of
+   content without having to measure pixel heights in JS, and never
+   causes a layout jump because the row simply grows/shrinks in place.
+*/
+.menu-extra-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s ease;
+}
+
+.menu-extra-wrap.is-expanded {
+  grid-template-rows: 1fr;
+}
+
+.menu-extra-inner {
+  overflow: hidden;
+}
+
+.menu-extra-grid {
+  margin-block-start: 10px;
+}
+
+.show-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px auto 0;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.12s ease;
+}
+
+.show-more-btn:hover,
+.show-more-btn:focus-visible {
+  background: var(--gold);
+}
+
+.show-more-btn:active {
+  transform: scale(0.97);
+}
+
+.show-more-icon {
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: transform 0.25s ease;
+}
+
+.show-more-btn.is-expanded .show-more-icon {
+  transform: rotate(180deg);
+}
+
 .product-card {
   position: relative;
   background: var(--card-dark);
@@ -1110,7 +1172,10 @@ img {
   .reveal,
   .wheel-result-reveal,
   .wheel-pointer-land,
-  .top-seller-card {
+  .top-seller-card,
+  .menu-extra-wrap,
+  .show-more-btn,
+  .show-more-icon {
     transition: none !important;
     animation: none !important;
   }

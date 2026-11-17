@@ -26,6 +26,15 @@
   let searchQuery = '';
   let brandSettings = {};
 
+  // Collapsible Product Categories (owner-approved enhancement): which
+  // categories the customer has clicked "Show All" on, keyed by category
+  // id. Lives for the page's lifetime, independent of search — a search
+  // never adds to or clears this set, which is exactly what lets the
+  // category return to its own prior collapsed/expanded state once the
+  // search is cleared (brief, section 3). Each category's membership is
+  // independent of every other's by construction (a Set keyed by id).
+  const expandedCategories = new Set();
+
   function prefersReducedMotion() {
     return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }
@@ -326,18 +335,24 @@
       return;
     }
 
+    const isSearching = !!searchQuery;
+
     menuRoot.innerHTML = categories
       .map((c) => {
         const items = byCategory.get(c.id) || [];
         if (searchQuery && items.length === 0) return ''; // hide empty sections while searching
+        if (items.length === 0) {
+          return `
+            <section class="menu-section" id="cat-${c.id}">
+              <h2 class="menu-section-title">${escapeHtml(c.name)}</h2>
+              <p class="menu-section-empty">No items in this category yet.</p>
+            </section>
+          `;
+        }
         return `
           <section class="menu-section" id="cat-${c.id}">
             <h2 class="menu-section-title">${escapeHtml(c.name)}</h2>
-            ${
-              items.length === 0
-                ? '<p class="menu-section-empty">No items in this category yet.</p>'
-                : `<div class="product-grid">${items.map(productCardHtml).join('')}</div>`
-            }
+            ${categoryItemsHtml(c.id, items, isSearching)}
           </section>
         `;
       })
@@ -353,6 +368,85 @@
           e.preventDefault();
           card.click();
         }
+      });
+    });
+
+    wireShowMoreButtons();
+  }
+
+  // ---------------- Collapsible category products ----------------
+  //
+  // Owner-approved enhancement. MenuCollapse (public/js/menuCollapse.js)
+  // holds the pure, independently-unit-tested decision logic (how many
+  // items to show, whether a toggle is needed, what it should say); this
+  // function only turns that into markup. The existing displayOrder sort
+  // (already applied server-side — see publicMenuController.js) is never
+  // re-sorted or altered here: `items` is sliced in the order it arrives.
+  function categoryItemsHtml(categoryId, items, isSearching) {
+    const expanded = expandedCategories.has(categoryId);
+    const count = MenuCollapse.visibleCount(items.length, expanded, isSearching);
+    const showToggle = MenuCollapse.shouldShowToggle(items.length, isSearching);
+
+    if (!showToggle) {
+      // 0 (unreachable here — caller already handles empty categories), 1,
+      // 2 items, or a search in progress: everything that should be
+      // visible just renders in a single grid, no button at all.
+      return `<div class="product-grid">${items.slice(0, count).map(productCardHtml).join('')}</div>`;
+    }
+
+    const firstItems = items.slice(0, MenuCollapse.COLLAPSED_COUNT);
+    const extraItems = items.slice(MenuCollapse.COLLAPSED_COUNT);
+    const label = MenuCollapse.toggleButtonLabel(items.length, expanded);
+    const wrapId = `menu-extra-${categoryId}`;
+
+    return `
+      <div class="product-grid">${firstItems.map(productCardHtml).join('')}</div>
+      <div class="menu-extra-wrap ${expanded ? 'is-expanded' : ''}" id="${wrapId}">
+        <div class="menu-extra-inner">
+          <div class="product-grid menu-extra-grid">${extraItems.map(productCardHtml).join('')}</div>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="show-more-btn"
+        data-cat="${categoryId}"
+        data-total="${items.length}"
+        aria-expanded="${expanded}"
+        aria-controls="${wrapId}"
+      >
+        <span class="show-more-label">${escapeHtml(label)}</span>
+        <span class="show-more-icon" aria-hidden="true">&#9662;</span>
+      </button>
+    `;
+  }
+
+  // Toggling a category only ever flips that one category's own button,
+  // wrapper and remembered expanded state — every other category's button
+  // and DOM node is left completely untouched, which is what keeps each
+  // category's expand/collapse state independent of the others (brief,
+  // section 2). No re-render of the whole menu here on purpose: toggling
+  // a class on the existing wrapper (rather than rebuilding it) is what
+  // lets the CSS expand/collapse transition actually play.
+  function wireShowMoreButtons() {
+    menuRoot.querySelectorAll('.show-more-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const categoryId = btn.dataset.cat;
+        const total = Number(btn.dataset.total);
+        const wasExpanded = expandedCategories.has(categoryId);
+        const nowExpanded = !wasExpanded;
+
+        if (nowExpanded) {
+          expandedCategories.add(categoryId);
+        } else {
+          expandedCategories.delete(categoryId);
+        }
+
+        const wrap = document.getElementById(`menu-extra-${categoryId}`);
+        if (wrap) wrap.classList.toggle('is-expanded', nowExpanded);
+        btn.setAttribute('aria-expanded', String(nowExpanded));
+        const labelEl = btn.querySelector('.show-more-label');
+        if (labelEl) labelEl.textContent = MenuCollapse.toggleButtonLabel(total, nowExpanded);
+        btn.classList.toggle('is-expanded', nowExpanded);
       });
     });
   }
